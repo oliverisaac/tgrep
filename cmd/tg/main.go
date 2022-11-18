@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	var err error
 	var parsedRegex string
 
 	for i, arg := range os.Args[1:] {
