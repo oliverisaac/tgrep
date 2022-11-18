@@ -5,6 +5,9 @@
 *.so
 *.dylib
 
+bin
+!bin/.gitkeep
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -17,3 +20,6 @@
 dist/
 cmd/tg/tg
 cmd/tgrep/tgrep
+
+# Jetbrains
+.idea
