@@ -9,6 +9,11 @@ build: ## Build the tg and tgrep binaries - output into the ./bin directory
 	go build -o $(PWD)/bin/tg $(PWD)/cmd/tg
 	go build -o $(PWD)/bin/tgrep $(PWD)/cmd/tgrep
 
+clean: ## Remove temporary artifacts from build environment
+	go clean
+	rm bin/tg
+	rm bin/tgrep
+
 goreleaser:
 	goreleaser --snapshot --skip-publish --rm-dist
 
