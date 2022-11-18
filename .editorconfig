@@ -1,0 +1,7 @@
+root = true
+
+[{*.go,*.md,*.yaml}]
+end_of_line = lf
+max_line_length = 140
+indent_size = 2
+indent_style = space
