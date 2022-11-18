@@ -5,6 +5,9 @@
 *.so
 *.dylib
 
+bin
+!bin/.gitkeep
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -15,5 +18,6 @@
 # vendor/
 
 dist/
-bin
-!bin/.gitkeep
+
+# Jetbrains
+.idea
