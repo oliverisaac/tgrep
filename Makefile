@@ -1,3 +1,10 @@
+.PHONY: release, goreleaser, tg, tgrep
+
+tg:
+	cd cmd/tg && go run .
+
+tgrep:
+	cd cmd/tgrep && go run .
 
 release:
 	[[ $$( git rev-parse --abbrev-ref HEAD ) == "main" ]] # make sure we are on main
