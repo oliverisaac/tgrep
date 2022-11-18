@@ -1,14 +1,17 @@
 package templating
 
 import (
-	"github.com/pkg/errors"
 	"regexp"
+
+	"github.com/pkg/errors"
 )
 
 var specialRegexCharacters = map[string]bool{
 	`[`: true,
 	`(`: true,
 	`)`: true,
+	`{`: true,
+	`}`: true,
 	`$`: true,
 	`^`: true,
 	`\`: true,
@@ -32,12 +35,6 @@ func Parse(input string) (string, error) {
 			nextTwo = string(inputArr[i : i+2])
 		}
 
-		if nextTwo == "{{" {
-			i++
-			insideTemplate = true
-			templateContent = ""
-			continue
-		}
 		if insideTemplate {
 			if nextTwo == "}}" {
 				i++
@@ -53,11 +50,27 @@ func Parse(input string) (string, error) {
 			continue
 		}
 
+		if nextTwo == "{{" {
+			i++
+			insideTemplate = true
+			templateContent = ""
+			continue
+		}
+
+		if nextTwo == `\{` {
+			i++
+			thisChar = `{`
+		}
+
 		if _, ok := specialRegexCharacters[thisChar]; ok {
 			output = output + `\` + thisChar
 		} else {
 			output = output + thisChar
 		}
+	}
+
+	if insideTemplate {
+		return "", errors.New("Unclosed template {{")
 	}
 
 	return output, nil

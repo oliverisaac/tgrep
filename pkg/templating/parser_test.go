@@ -48,6 +48,24 @@ func TestParse(t *testing.T) {
 			want:    `\[`,
 			wantErr: false,
 		},
+		{
+			name:    "If a tempalte is not closed, that's a paddlin'",
+			input:   "{{int",
+			want:    "",
+			wantErr: true,
+		},
+		{
+			name:    "If double braces are inside a template, that should be fine",
+			input:   "{{{{}}",
+			want:    "{{",
+			wantErr: false,
+		},
+		{
+			name:    "If double braces are escaped, they should remain escaped",
+			input:   `\{{name}}`,
+			want:    `\{\{name\}\}`,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
