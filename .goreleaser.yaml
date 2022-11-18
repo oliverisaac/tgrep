@@ -1,0 +1,58 @@
+
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    - go test ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: cmd/tgrep/main.go
+    binary: tgrep
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    main: cmd/tg/main.go
+    binary: tg
+
+archives:
+  - replacements:
+      amd64: x86_64
+    files:
+    - README.md
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+# From: https://medium.com/@ben.lafferty/deploying-go-cli-applications-316e9cca16a4
+brews:
+  - tap:
+        owner: oliverisaac
+        name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/oliverisaac/tgrep
+    description: Grep command with easy to use templates and automatic escaping of special characters
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - 'README'
+      - Merge pull request
+      - Merge branch
