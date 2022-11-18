@@ -8,6 +8,23 @@
 
 `tgrep`: The `tgrep` command parses each argument like the `tg` command, but it also reads from `os.Stdin` and outputs every line that matches.
 
+
+## Quick Templates
+
+If you only want to search for string that can be defined by a single template, you can pass in that template name as the only argument.
+
+E.g.:
+
+```
+tg {{word}}
+
+# and
+
+tg word
+```
+
+would be equivilent.
+
 ## About Templates
 
 Regex templates allow you to easily create regular expresions that match complex strings without needing to escape any characters.
