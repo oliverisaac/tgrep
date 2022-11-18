@@ -18,6 +18,8 @@ bin
 # vendor/
 
 dist/
+cmd/tg/tg
+cmd/tgrep/tgrep
 
 # Jetbrains
 .idea
