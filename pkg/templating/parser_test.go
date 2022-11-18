@@ -1,4 +1,4 @@
-package tgrep
+package templating
 
 import (
 	"testing"

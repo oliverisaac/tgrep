@@ -1,19 +1,9 @@
-package tgrep
+package templating
 
 import (
-	"regexp"
-
 	"github.com/pkg/errors"
+	"regexp"
 )
-
-var templates = map[string]string{
-	"int":     "-?[0-9]+",
-	"number":  `-?[0-9]+(.[0-9]+)?`,
-	"uuid":    `[0-9A-Fa-f-]{8}-[0-9A-Fa-f-]{4}-[0-9A-Fa-f-]{4}-[0-9A-Fa-f-]{4}-[0-9A-Fa-f-]{12}`,
-	"integer": `[0-9]+`,
-	"email":   `[^ ]+@[^ ]+[.][^ ]+`,
-	"word":    `\b[a-zA-Z0-9-]+\b`,
-}
 
 var specialRegexCharacters = map[string]bool{
 	`[`: true,
