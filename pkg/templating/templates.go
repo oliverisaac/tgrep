@@ -8,3 +8,7 @@ var templates = map[string]string{
 	"email":   `[^ ]+@[^ ]+[.][^ ]+`,
 	"word":    `\b[a-zA-Z0-9-]+\b`,
 }
+
+func GetTemplates() map[string]string {
+	return templates
+}
