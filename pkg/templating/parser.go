@@ -76,7 +76,11 @@ func Parse(input string) (string, error) {
 	return output, nil
 }
 
-func templatedRegex(input string) (*regexp.Regexp, error) {
+func TemplatedRegexCaseInsensitive(input string) (*regexp.Regexp, error) {
+	return TemplatedRegex("{{(?i)}}" + input)
+}
+
+func TemplatedRegex(input string) (*regexp.Regexp, error) {
 	parsedInput, err := Parse(input)
 	if err != nil {
 		return nil, errors.Wrap(err, "Parsing input template")
@@ -89,7 +93,7 @@ func templatedRegex(input string) (*regexp.Regexp, error) {
 }
 
 func matchesRegex(stringToCheck, searchRegex string) (bool, error) {
-	r, err := templatedRegex(searchRegex)
+	r, err := TemplatedRegex(searchRegex)
 	if err != nil {
 		return false, errors.Wrapf(err, "Getting tempalted regex of %s", searchRegex)
 	}
