@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 
 	arg "github.com/alexflint/go-arg"
 
@@ -32,7 +33,27 @@ func main() {
 	}
 }
 
-func runCommand(args []string, input io.Reader, output io.Writer) error {
+func splitShorthandArgs(args []string) []string {
+	shorthandRegex := regexp.MustCompile("^-[^-]+")
+
+	out := []string{}
+	for i, a := range args {
+		if shorthandRegex.MatchString(a) {
+			for _, suba := range strings.Split(a, "")[1:] {
+				out = append(out, "-"+suba)
+			}
+		} else {
+			out = append(out, a)
+		}
+		if a == "--" {
+			out = append(out, args[i:]...)
+			break
+		}
+	}
+	return out
+}
+
+func runCommand(originalArgs []string, input io.Reader, output io.Writer) error {
 	config := config{}
 	argParser, err := arg.NewParser(arg.Config{
 		Program: "tgrep",
@@ -41,6 +62,7 @@ func runCommand(args []string, input io.Reader, output io.Writer) error {
 		return errors.Wrap(err, "Creating arg parser")
 	}
 
+	args := splitShorthandArgs(originalArgs)
 	err = argParser.Parse(args)
 	if len(args) == 0 || err == arg.ErrHelp {
 		return errors.New(generateHelpMessage(argParser))

@@ -118,6 +118,22 @@ func Test_runCommand(t *testing.T) {
 			wantLines: []string{"i like mail"},
 			wantErr:   false,
 		},
+		{
+			name:      "Combine short flags",
+			args:      []string{"-Ewe", "mai[a-z]"},
+			fileLines: []string{"HELLO WORLD", "i like mail", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"i like mail"},
+			wantErr:   false,
+		},
+		{
+			name:      "Double dash switches to positional args",
+			args:      []string{"-Ew", "--", "-mai[a-z]"},
+			fileLines: []string{"HELLO WORLD", "i-like-mail", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"i-like-mail"},
+			wantErr:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
