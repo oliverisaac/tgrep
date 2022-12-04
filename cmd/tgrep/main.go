@@ -16,9 +16,11 @@ import (
 )
 
 type config struct {
-	CaseInsensitive bool     `arg:"-i"`
-	Regex           []string `arg:"-e,separate"`
-	PositionalArgs  []string `arg:"positional"`
+	WordBoundary    bool     `arg:"-w" help:"Regex should match at word boundaries"`
+	CaseInsensitive bool     `arg:"-i" help:"Case insensitive search"`
+	DoNotTemplate   bool     `arg:"-E" help:"Configured regex should not be templated, same as using egrep"`
+	Regex           []string `arg:"-e,separate" help:"Regex to use"`
+	PositionalArgs  []string `arg:"positional" help:"Files to search. If -r, then directories will be searched, if no -e then first argument is the regex to use"`
 }
 
 // Run is the primary entrypoint for the cli
@@ -56,16 +58,33 @@ func runCommand(args []string, input io.Reader, output io.Writer) error {
 	}
 
 	regexesToUse := []*regexp.Regexp{}
+	var templateWrapper = templating.Wrap
+	if config.DoNotTemplate {
+		templateWrapper = func(s string) string { return s }
+	}
 	for _, r := range config.Regex {
 		var reg *regexp.Regexp
 		var err error
+
+		if config.WordBoundary {
+			r = templateWrapper(`\b`) + r + templateWrapper(`\b`)
+		}
+
 		if config.CaseInsensitive {
-			reg, err = templating.TemplatedRegexCaseInsensitive(r)
+			r = templateWrapper("(?i)") + r
+		}
+
+		if config.DoNotTemplate {
+			reg, err = regexp.Compile(r)
 		} else {
 			reg, err = templating.TemplatedRegex(r)
 		}
+
 		if err != nil {
 			return errors.Wrap(err, "Templating regex")
+		}
+		if reg == nil {
+			return errors.New("Did not create a regex")
 		}
 		regexesToUse = append(regexesToUse, reg)
 	}
@@ -105,6 +124,10 @@ func runRegularExpressionsAgainstReader(regexesToUse []*regexp.Regexp, read io.R
 	}
 
 	return nil
+}
+
+func boolArrayCase(options ...bool) string {
+	return fmt.Sprintf("%v", options)
 }
 
 func generateHelpMessage(argParser *arg.Parser) string {

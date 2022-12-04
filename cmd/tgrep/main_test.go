@@ -86,6 +86,38 @@ func Test_runCommand(t *testing.T) {
 			wantLines: []string{"HELLO WORLD"},
 			wantErr:   false,
 		},
+		{
+			name:      "Non-templated regex",
+			args:      []string{"-E", "-e", "he[lo]{3}"},
+			fileLines: []string{"hello world", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"hello world"},
+			wantErr:   false,
+		},
+		{
+			name:      "Case insensitive Non-templated regex",
+			args:      []string{"-E", "-i", "-e", "he[lo]{3}"},
+			fileLines: []string{"HELLO WORLD", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"HELLO WORLD"},
+			wantErr:   false,
+		},
+		{
+			name:      "Word boundary templated regex",
+			args:      []string{"-w", "-e", "mail"},
+			fileLines: []string{"HELLO WORLD", "i like mail", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"i like mail"},
+			wantErr:   false,
+		},
+		{
+			name:      "Word boundary non-templated regex",
+			args:      []string{"-E", "-w", "-e", "mai[a-z]"},
+			fileLines: []string{"HELLO WORLD", "i like mail", "my email is example@example.com"},
+			sendLines: []string{},
+			wantLines: []string{"i like mail"},
+			wantErr:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

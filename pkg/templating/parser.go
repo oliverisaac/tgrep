@@ -100,3 +100,7 @@ func matchesRegex(stringToCheck, searchRegex string) (bool, error) {
 
 	return r.MatchString(stringToCheck), nil
 }
+
+func Wrap(s string) string {
+	return "{{" + s + "}}"
+}
